@@ -120,3 +120,37 @@ uint8_t* string_to_base64(uint8_t string_data[]) {
   Array string_arr = string_to_array(string_data);
   return array_to_base64(string_arr);
 }
+
+
+uint8_t* array_to_hex(Array hex_data) {
+  size_t length = (hex_data.length * 2) + 1;
+  uint8_t *result = malloc(length);
+  for(size_t i = 0; i < hex_data.length; i++) {
+    sprintf(&result[i * 2], "%02x", hex_data.data[i]);
+  }
+  result[length - 1] = 0;
+  return result;
+}
+
+
+Array hex_to_fixed_xor_array(uint8_t hex_data[], uint8_t xor_data[]) {
+  Array hex_arr = hex_to_array(hex_data);
+  Array xor_arr = hex_to_array(xor_data);
+
+  Array result = {
+    .length = hex_arr.length,
+    .data = malloc(hex_arr.length)
+  };
+
+  for(size_t i = 0; i < hex_arr.length; i += 1) {
+    result.data[i] = hex_arr.data[i] ^ xor_arr.data[i];
+  }
+
+  return result;
+}
+
+
+uint8_t* hex_to_fixed_xor(uint8_t hex_data[], uint8_t xor_data[]) {
+  Array result = hex_to_fixed_xor_array(hex_data, xor_data);
+  return array_to_hex(result);
+}

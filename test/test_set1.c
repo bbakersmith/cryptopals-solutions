@@ -83,6 +83,31 @@ TEST(set1, test_hex_to_base64) {
 }
 
 
+TEST(set1, test_array_to_hex) {
+  uint8_t data[3] = {255, 0, 28};
+  Array input = {
+    .length = 3,
+    .data = data
+  };
+  uint8_t *result = array_to_hex(input);
+  TEST_ASSERT_EQUAL_MESSAGE(0, strcmp(result, "ff001c"), result);
+}
+
+
+TEST(set1, test_hex_to_fixed_xor) {
+  uint8_t *xored_data = hex_to_fixed_xor(
+    "1c0111001f010100061a024b53535009181c",
+    "686974207468652062756c6c277320657965"
+  );
+
+  TEST_ASSERT_EQUAL_MESSAGE(
+    0,
+    strcmp(xored_data, "746865206b696420646f6e277420706c6179"),
+    xored_data
+  );
+}
+
+
 TEST_GROUP_RUNNER(set1) {
   RUN_TEST_CASE(set1, test_base64_first_of_four);
   RUN_TEST_CASE(set1, test_base64_second_of_four);
@@ -92,4 +117,6 @@ TEST_GROUP_RUNNER(set1) {
   RUN_TEST_CASE(set1, test_hex_to_array);
   RUN_TEST_CASE(set1, test_string_to_base64);
   RUN_TEST_CASE(set1, test_hex_to_base64);
+  RUN_TEST_CASE(set1, test_array_to_hex);
+  RUN_TEST_CASE(set1, test_hex_to_fixed_xor);
 }

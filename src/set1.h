@@ -23,4 +23,9 @@ uint8_t* hex_to_base64(uint8_t hex_data[]);
 uint8_t* string_to_base64(uint8_t string_data[]);
 
 
+uint8_t* array_to_hex(Array hex_data);
+Array hex_to_fixed_xor_array(uint8_t hex_data[], uint8_t xor_data[]);
+uint8_t* hex_to_fixed_xor(uint8_t hex_data[], uint8_t xor_data[]);
+
+
 #endif
