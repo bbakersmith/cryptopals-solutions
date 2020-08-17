@@ -31,3 +31,6 @@ clean: build
 
 build/1.3:
 	$(CC) $(CCFLAGS) $(INCLUDES) $(SOURCES) bin/1.3.c -o $@
+
+build/1.4:
+	$(CC) $(CCFLAGS) $(INCLUDES) $(SOURCES) bin/1.4.c -o $@
