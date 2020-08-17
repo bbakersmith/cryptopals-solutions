@@ -13,6 +13,9 @@ TEST_SETUP(set1) {};
 TEST_TEAR_DOWN(set1) {};
 
 
+// 1.1
+
+
 TEST(set1, test_base64_first_of_four) {
   TEST_ASSERT_EQUAL(0, base64_first_of_four(0));
   TEST_ASSERT_EQUAL(63, base64_first_of_four(255));
@@ -83,6 +86,9 @@ TEST(set1, test_hex_to_base64) {
 }
 
 
+// 1.2
+
+
 TEST(set1, test_array_to_hex) {
   uint8_t data[3] = {255, 0, 28};
   Array input = {
@@ -108,6 +114,44 @@ TEST(set1, test_hex_to_fixed_xor) {
 }
 
 
+// 1.3
+
+
+TEST(set1, test_char_freq) {
+  TEST_ASSERT_EQUAL(50000, char_freq("ABbCcC", 'c'));
+  TEST_ASSERT_EQUAL(20000, char_freq("ABbCcCDDDD", 'b'));
+  TEST_ASSERT_EQUAL(33333, char_freq("ABC", 'a'));
+  TEST_ASSERT_EQUAL(0, char_freq("ABC", 'd'));
+
+  // TODO ignore whitespace
+  TEST_ASSERT_EQUAL(50000, char_freq("A Bb CcC", 'c'));
+  TEST_ASSERT_EQUAL(20000, char_freq("    ABbCcCDDDD    ", 'b'));
+  TEST_ASSERT_EQUAL(33333, char_freq("A BC", 'a'));
+  TEST_ASSERT_EQUAL(0, char_freq("A B C", 'd'));
+}
+
+
+TEST(set1, test_magnitude_difference) {
+  TEST_ASSERT_EQUAL(100, magnitude_difference(500, 50000));
+  TEST_ASSERT_EQUAL(100, magnitude_difference(50000, 500));
+  TEST_ASSERT_EQUAL(1, magnitude_difference(500, 500));
+  TEST_ASSERT_EQUAL(1, magnitude_difference(50000, 50000));
+  TEST_ASSERT_EQUAL(50, magnitude_difference(0, 50));
+}
+
+
+TEST(set1, test_single_char_string) {
+  TEST_ASSERT_EQUAL(0, strcmp(single_char_string('c', 7), "ccccccc"));
+  TEST_ASSERT_EQUAL(0, strcmp(single_char_string('z', 3), "zzz"));
+}
+
+
+TEST(set1, test_decode_hex_string) {
+  uint8_t *result = decode_hex_string("616263");
+  TEST_ASSERT_EQUAL_MESSAGE(0, strcmp(result, "abc"), result);
+}
+
+
 TEST_GROUP_RUNNER(set1) {
   RUN_TEST_CASE(set1, test_base64_first_of_four);
   RUN_TEST_CASE(set1, test_base64_second_of_four);
@@ -119,4 +163,8 @@ TEST_GROUP_RUNNER(set1) {
   RUN_TEST_CASE(set1, test_hex_to_base64);
   RUN_TEST_CASE(set1, test_array_to_hex);
   RUN_TEST_CASE(set1, test_hex_to_fixed_xor);
+  RUN_TEST_CASE(set1, test_char_freq);
+  RUN_TEST_CASE(set1, test_magnitude_difference);
+  RUN_TEST_CASE(set1, test_single_char_string);
+  RUN_TEST_CASE(set1, test_decode_hex_string);
 }
