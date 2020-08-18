@@ -335,3 +335,37 @@ uint8_t* decode_hex_string(uint8_t hex_data[]) {
   result[length] = 0;
   return result;
 }
+
+
+void encode_repeating_key_xor(uint8_t data[], uint8_t key[]) {
+  size_t datalen = strlen(data);
+  size_t keylen = strlen(key);
+
+  size_t keyi = 0;
+  for(size_t datai = 0; datai < datalen; datai++) {
+    /* printf("%c ^ %c ", data[datai], key[keyi]); */
+
+    data[datai] = data[datai] ^ key[keyi];
+
+    /* printf("= %c(%d, %02x)\n", data[datai], data[datai], data[datai]); */
+
+    keyi++;
+    if(keylen <= keyi) {
+      keyi = 0;
+    }
+  }
+}
+
+
+uint8_t *encode_hex_string(uint8_t data[]) {
+  size_t datalen = strlen(data);
+  size_t resultlen = (datalen * 2) + 1;
+  uint8_t *result = (uint8_t *) malloc(resultlen);
+
+  for(size_t i = 0; i < datalen; i++) {
+    sprintf(&result[i * 2], "%02x", data[i]);
+  }
+
+  result[resultlen - 1] = 0;
+  return result;
+}

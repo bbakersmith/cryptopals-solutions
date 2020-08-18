@@ -47,4 +47,11 @@ uint8_t* single_char_xor(Array arr, uint8_t c);
 uint8_t* decode_hex_string(uint8_t hex_data[]);
 
 
+// 1.5
+
+
+void encode_repeating_key_xor(uint8_t data[], uint8_t key[]);
+uint8_t *encode_hex_string(uint8_t data[]);
+
+
 #endif
