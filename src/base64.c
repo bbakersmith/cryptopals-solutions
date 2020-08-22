@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "base64.h"
@@ -40,41 +41,48 @@ void base64_encode(Array *arr) {
 
   // iterate in three byte chunks
   while(1) {
-    uint8_t c1;
-    uint8_t c2;
-    uint8_t c3;
-
-    c1 = arr->data[in_i];
-    if(c1 == 0) {
+    if(arr->length <= in_i) {
       break;
     }
+
+    uint8_t c1 = arr->data[in_i]; // FIXME invalid read
+    in_i++;
 
     base64_data[out_i] = base64_chars[base64_first_of_four(c1)];
-    out_i += 1;
+    out_i++;
 
-    c2 = arr->data[in_i + 1];
+    if(arr->length <= in_i) {
+      base64_data[out_i] = base64_chars[base64_second_of_four(c1, 0)];
+      out_i++;
+      base64_data[out_i] = BASE64_PAD_CHAR;
+      out_i++;
+      base64_data[out_i] = BASE64_PAD_CHAR;
+      out_i++;
+      break;
+    }
+
+    uint8_t c2 = arr->data[in_i];
+    in_i++;
+
     base64_data[out_i] = base64_chars[base64_second_of_four(c1, c2)];
-    out_i += 1;
-    if(c2 == 0) {
+    out_i++;
+
+    if(arr->length <= in_i) {
+      base64_data[out_i] = base64_chars[base64_third_of_four(c2, 0)];
+      out_i++;
       base64_data[out_i] = BASE64_PAD_CHAR;
-      out_i += 1;
-      base64_data[out_i] = BASE64_PAD_CHAR;
-      out_i += 1;
+      out_i++;
       break;
     }
 
-    c3 = arr->data[in_i + 2];
+    uint8_t c3 = arr->data[in_i];
+    in_i++;
+
     base64_data[out_i] = base64_chars[base64_third_of_four(c2, c3)];
-    out_i += 1;
-    if(c3 == 0) {
-      base64_data[out_i] = BASE64_PAD_CHAR;
-      out_i += 1;
-      break;
-    }
+    out_i++;
 
     base64_data[out_i] = base64_chars[base64_fourth_of_four(c3)];
-    out_i += 1;
-    in_i += 3;
+    out_i++;
   }
 
   free(arr->data);
@@ -117,20 +125,18 @@ void base64_decode(Array *arr) {
 }
 
 
-uint8_t* hex_to_base64(uint8_t hex_data[]) {
+void hex_to_base64(char hex_data[], char result[]) {
   Array arr = array_from_string(hex_data);
   hex_decode(&arr);
   base64_encode(&arr);
-  uint8_t *result = array_to_string(&arr);
+  array_to_string(&arr, result);
   array_free(&arr);
-  return result;
 }
 
 
-uint8_t* string_to_base64(uint8_t string_data[]) {
+void string_to_base64(char string_data[], char result[]) {
   Array arr = array_from_string(string_data);
   base64_encode(&arr);
-  uint8_t *result = array_to_string(&arr);
+  array_to_string(&arr, result);
   array_free(&arr);
-  return result;
 }

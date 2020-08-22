@@ -5,7 +5,8 @@
 #include "array.h"
 
 
-void hex_decode(Array *hex_arr);
+void hex_decode(Array *arr);
+void hex_encode(Array *arr);
 
 
 #endif

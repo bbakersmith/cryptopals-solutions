@@ -2,14 +2,18 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "array.h"
+#include "hex.h"
 #include "set1.h"
 
 
 void main() {
   uint8_t input[256] = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736";
-  Array input_arr = hex_to_array(input);
+  Array input_arr = array_from_string(input);
+  hex_decode(&input_arr);
 
-  printf("INPUT: %s\n", array_to_string(input_arr));
+  printf("Input: ");
+  array_print(&input_arr);
 
   uint8_t top_char;
   uint32_t top_score = -1;

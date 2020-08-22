@@ -15,8 +15,9 @@ typedef struct Array {
 Array array_new(size_t length);
 void array_free(Array *arr);
 
-Array array_from_string(uint8_t string_data[]);
-uint8_t* array_to_string(Array *arr);
+Array array_from_data(uint8_t data[], size_t length);
+Array array_from_string(char string_data[]);
+void array_to_string(Array *arr, char result[]);
 void array_print(Array *arr);
 
 

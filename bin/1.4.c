@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "array.h"
+#include "hex.h"
 #include "set1.h"
 
 
@@ -17,7 +19,8 @@ void main() {
   uint8_t top_decoded[61];
 
   while(fgets(input, bufferLength, filePointer)) {
-    Array input_arr = hex_to_array(input);
+    Array input_arr = array_from_string(input);
+    hex_decode(&input_arr);
 
     /* printf("INPUT: %s\n", array_to_string(input_arr)); */
 

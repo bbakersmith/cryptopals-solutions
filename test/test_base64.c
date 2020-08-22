@@ -44,8 +44,8 @@ TEST(base64, test_base64_fourth_of_four) {
 
 TEST(base64, test_base64_encode) {
   typedef struct Case {
-    uint8_t input[4];
-    uint8_t expected[5];
+    char input[4];
+    char expected[5];
   } Case;
 
   Case cases[3] = {
@@ -54,11 +54,14 @@ TEST(base64, test_base64_encode) {
     {"a", "YQ=="}
   };
 
-  char msg[50];
+  char msg[512];
   for(uint8_t i = 0; i < 3; i++) {
     Array arr = array_from_string(cases[i].input);
     base64_encode(&arr);
-    uint8_t *result = array_to_string(&arr);
+
+    char result[256];
+    array_to_string(&arr, result);
+
     array_free(&arr);
 
     sprintf(msg, "Failed iteration %i with %s", i, result);
@@ -70,7 +73,12 @@ TEST(base64, test_base64_encode) {
 TEST(base64, test_base64_decode) {
   Array input = array_from_string("Zm9vIGJhciBiYXo=");
   base64_decode(&input);
-  uint8_t *result_string = array_to_string(&input);
+
+  char result_string[256];
+  array_to_string(&input, result_string);
+
+  array_free(&input);
+
   TEST_ASSERT_EQUAL_MESSAGE(
     0,
     strcmp(result_string, "foo bar baz"),
@@ -80,18 +88,21 @@ TEST(base64, test_base64_decode) {
 
 
 TEST(base64, test_string_to_base64) {
-  uint8_t *base64_data = string_to_base64("abc123X");
-  TEST_ASSERT_EQUAL_MESSAGE(0, strcmp(base64_data, "YWJjMTIzWA=="), base64_data);
+  char result[48];
+  string_to_base64("abc123X", result);
+  TEST_ASSERT_EQUAL_MESSAGE(0, strcmp(result, "YWJjMTIzWA=="), result);
 }
 
 
 TEST(base64, test_hex_to_base64) {
-  uint8_t *base64_data = hex_to_base64(
-        "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d"
+  char result[512];
+  hex_to_base64(
+      "49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d",
+      result
   );
 
-  uint8_t expected[512] = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
-  TEST_ASSERT_EQUAL_MESSAGE(0, strcmp(base64_data, expected), base64_data);
+  char expected[512] = "SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t";
+  TEST_ASSERT_EQUAL_MESSAGE(0, strcmp(result, expected), result);
 }
 
 
