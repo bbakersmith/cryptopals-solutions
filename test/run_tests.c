@@ -2,8 +2,8 @@
 
 static void run_all_tests(void) {
   RUN_TEST_GROUP(base64);
+  RUN_TEST_GROUP(distance);
   RUN_TEST_GROUP(hex);
-  RUN_TEST_GROUP(set1);
   RUN_TEST_GROUP(xor);
 }
 

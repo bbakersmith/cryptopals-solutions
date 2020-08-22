@@ -1,12 +1,7 @@
-#include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "base64.h"
-#include "hex.h"
-#include "set1.h"
-#include "xor.h"
+#include "distance.h"
 
 
 // https://en.wikipedia.org/wiki/Letter_frequency

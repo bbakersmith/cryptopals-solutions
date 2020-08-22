@@ -66,7 +66,32 @@ TEST(xor, test_xor_repeating_key_encode) {
 }
 
 
+TEST(xor, test_hex_to_fixed_xor) {
+  Array input_arr = array_from_string("1c0111001f010100061a024b53535009181c");
+  hex_decode(&input_arr);
+
+  Array key_arr = array_from_string("686974207468652062756c6c277320657965");
+  hex_decode(&key_arr);
+
+  xor_repeating_key(&input_arr, &key_arr);
+  hex_encode(&input_arr);
+
+  char result[256];
+  array_to_string(&input_arr, result);
+
+  array_free(&input_arr);
+  array_free(&key_arr);
+
+  TEST_ASSERT_EQUAL_MESSAGE(
+    0,
+    strcmp(result, "746865206b696420646f6e277420706c6179"),
+    result
+  );
+}
+
+
 TEST_GROUP_RUNNER(xor) {
   RUN_TEST_CASE(xor, test_xor_repeating_key_decode);
   RUN_TEST_CASE(xor, test_xor_repeating_key_encode);
+  RUN_TEST_CASE(xor, test_hex_to_fixed_xor);
 }
