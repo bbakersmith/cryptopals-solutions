@@ -61,3 +61,12 @@ void array_print(Array *arr) {
   }
   printf("\n");
 }
+
+
+Array array_copy(Array *arr) {
+  Array new_arr = array_new(arr->length);
+  for(size_t i = 0; i < arr-> length; i++) {
+    new_arr.data[i] = arr->data[i];
+  }
+  return new_arr;
+}
