@@ -4,32 +4,41 @@
 
 #include "array.h"
 #include "hex.h"
-#include "set1.h"
+#include "measures.h"
+#include "xor.h"
 
 
-void main() {
-  FILE* filePointer;
-  int bufferLength = 255;
-  char input[bufferLength];
+int main() {
+  int bufferlen = 255;
+  char input[bufferlen];
 
-  filePointer = fopen("data/1.4.txt", "r");
+  FILE* file = fopen("data/1.4.txt", "r");
+  if(file == NULL) {
+    perror("fopen");
+    exit(1);
+  }
 
   uint8_t top_char;
   uint32_t top_score = -1;
   uint8_t top_decoded[61];
 
-  while(fgets(input, bufferLength, filePointer)) {
+  while(fgets(input, bufferlen, file)) {
     Array input_arr = array_from_string(input);
     hex_decode(&input_arr);
 
     /* printf("INPUT: %s\n", array_to_string(input_arr)); */
 
+    char *xored_string = (char *) malloc(input_arr.length + 1);
     for(uint16_t i = 0; i < 256; i ++) {
       uint8_t c = i;
-      uint8_t *xored_string = single_char_xor(input_arr, c);
+      Array input_copy = array_copy(&input_arr);
+      Array key_arr = array_from_data(&c, 1);
 
-      /* printf("C: %c\n", c); */
-      /* printf("XORED: %s\n\n", xored_string); */
+      xor_repeating_key(&input_copy, &key_arr);
+      array_free(&key_arr);
+
+      array_to_string(&input_copy, xored_string);
+      array_free(&input_copy);
 
       uint32_t score = total_char_freq_magnitude_difference(xored_string);
 
@@ -57,11 +66,12 @@ void main() {
         }
       }
 
-      free(xored_string);
     }
+    free(xored_string);
+    array_free(&input_arr);
   }
 
-  fclose(filePointer);
+  fclose(file);
 
   printf("Top char: %c\n", top_char);
   printf("Top score: %d\n", top_score);
