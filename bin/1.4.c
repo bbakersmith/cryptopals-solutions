@@ -27,7 +27,7 @@ int main() {
   XorSingleByteScore top_score_per_row[rowcount];
 
   for(size_t row = 0; row < rowcount; row++) {
-    size_t line_start_position = ftell(file);
+    size_t row_start_position = ftell(file);
     fgets(input, bufferlen, file);
 
     Array input_arr = array_from_string(input);
@@ -37,7 +37,7 @@ int main() {
     xor_score_single_byte(&input_arr, &top_score, 1);
     array_free(&input_arr);
 
-    top_score.id = line_start_position;
+    top_score.id = row_start_position;
 
     top_score_per_row[row] = top_score;
   }
