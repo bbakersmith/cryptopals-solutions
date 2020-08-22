@@ -3,6 +3,7 @@
 
 
 #include <stdint.h>
+#include <stdlib.h>
 
 
 uint32_t char_freq(char data[], uint8_t lower_char);
