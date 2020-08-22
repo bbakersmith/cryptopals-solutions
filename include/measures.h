@@ -1,5 +1,5 @@
-#ifndef _DISTANCE_H
-#define _DISTANCE_H
+#ifndef _MEASURES_H
+#define _MEASURES_H
 
 
 #include <stdint.h>

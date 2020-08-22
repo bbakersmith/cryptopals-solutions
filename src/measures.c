@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "distance.h"
+#include "measures.h"
 
 
 // https://en.wikipedia.org/wiki/Letter_frequency
