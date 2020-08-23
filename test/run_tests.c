@@ -1,6 +1,7 @@
 #include "unity_fixture.h"
 
 static void run_all_tests(void) {
+  RUN_TEST_GROUP(array);
   RUN_TEST_GROUP(base64);
   RUN_TEST_GROUP(hex);
   RUN_TEST_GROUP(measures);

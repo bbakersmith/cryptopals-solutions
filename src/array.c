@@ -70,3 +70,18 @@ Array array_copy(Array *arr) {
   }
   return new_arr;
 }
+
+
+void array_remove_value(Array *arr, uint8_t value) {
+  size_t resulti = 0;
+  for(size_t i = 0; i < arr->length; i++) {
+    if(arr->data[i] == value) {
+      continue;
+    } else {
+      arr->data[resulti] = arr->data[i];
+      resulti++;
+    }
+  }
+  arr->length = resulti;
+  arr->data = realloc(arr->data, resulti);
+}

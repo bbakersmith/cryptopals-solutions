@@ -1,7 +1,12 @@
+#include <float.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "measures.h"
+
+
+// TODO maybe this should be predict instead of measures?
 
 
 // https://en.wikipedia.org/wiki/Letter_frequency
@@ -114,9 +119,6 @@ uint32_t total_char_freq_magnitude_difference(char data[]) {
 }
 
 
-// 1.6
-
-
 uint32_t hamming_distance(char a[], char b[], size_t length) {
   uint32_t distance = 0;
   for(size_t c = 0; c < length; c++) {
@@ -127,4 +129,60 @@ uint32_t hamming_distance(char a[], char b[], size_t length) {
     }
   }
   return distance;
+}
+
+
+int compare_predict_keysize_distance(const void *a_void, const void *b_void) {
+  PredictKeysizeDistance *a = (PredictKeysizeDistance *) a_void;
+  PredictKeysizeDistance *b = (PredictKeysizeDistance *) b_void;
+  if(a->distance < b->distance) {
+    return -1;
+  } else if(b->distance < a->distance) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+
+void predict_keysize(
+  Array *data,
+  PredictKeysizeDistance result[],
+  size_t resultlen
+) {
+  uint8_t minkeysize = 2;
+  uint8_t maxkeysize = 40;
+  size_t predictionslen = maxkeysize - minkeysize + 1;
+  PredictKeysizeDistance predictions[predictionslen];
+  for(uint8_t keysize = minkeysize; keysize < (maxkeysize + 1); keysize++) {
+    char *block1 = (char *) data->data;
+    char *block2 = (char *) &data->data[keysize];
+    char *block3 = (char *) &data->data[keysize * 2];
+    char *block4 = (char *) &data->data[keysize * 3];
+
+    uint32_t gross_distance = hamming_distance(block1, block2, keysize) \
+      + hamming_distance(block2, block3, keysize) \
+      + hamming_distance(block3, block4, keysize) \
+      + hamming_distance(block4, block1, keysize) \
+      + hamming_distance(block1, block3, keysize) \
+      + hamming_distance(block2, block4, keysize);
+
+    float distance = gross_distance / 6.0 / keysize;
+    PredictKeysizeDistance prediction = {
+      .keysize = keysize,
+      .distance = distance
+    };
+    predictions[keysize - minkeysize] = prediction;
+  }
+
+  qsort(
+    predictions,
+    predictionslen,
+    sizeof(PredictKeysizeDistance),
+    &compare_predict_keysize_distance
+  );
+
+  for(size_t i = 0; i < resultlen; i++) {
+    result[i] = predictions[i];
+  }
 }

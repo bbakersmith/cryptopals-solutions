@@ -20,6 +20,7 @@ Array array_from_string(char string_data[]);
 void array_to_string(Array *arr, char result[]);
 void array_print(Array *arr);
 Array array_copy(Array *arr);
+void array_remove_value(Array *arr, uint8_t value);
 
 
 #endif
